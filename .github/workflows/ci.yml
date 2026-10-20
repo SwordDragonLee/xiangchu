@@ -53,6 +53,11 @@ jobs:
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
-      # 四个 app（admin / user-mp / chef-mp / supplier-mp）逐一类型检查
+      # 四个 app（admin / user-mp / chef-mp / supplier-mp）逐一类型检查；
+      # 不用 pnpm -r exec：--if-present 对 exec 无效，shared 包没有 vue-tsc 会中断
       - name: 类型检查
-        run: pnpm -r --if-present exec vue-tsc --noEmit
+        run: |
+          pnpm --filter admin exec vue-tsc --noEmit
+          pnpm --filter user-mp exec vue-tsc --noEmit
+          pnpm --filter chef-mp exec vue-tsc --noEmit
+          pnpm --filter supplier-mp exec vue-tsc --noEmit
