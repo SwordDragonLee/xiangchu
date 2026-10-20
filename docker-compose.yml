@@ -1,0 +1,77 @@
+# 乡厨系统一键部署：MySQL + Redis + RabbitMQ(延迟插件) + 后端 + 管理后台
+# 启动：docker compose up -d --build
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: xiangchu
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p123456"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    build: ./deploy/rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # 管理控制台 guest/guest
+
+  server:
+    build: ./server
+    environment:
+      XC_MYSQL_DSN: "root:123456@tcp(mysql:3306)/xiangchu?charset=utf8mb4&parseTime=True&loc=Local"
+      XC_REDIS_ADDR: "redis:6379"
+      XC_RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      XC_HTTP_ADDR: "0.0.0.0:8080"
+      XC_APP_MODE: "prod"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/web.Dockerfile
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+
+volumes:
+  mysql-data:
+  redis-data:
+  rabbitmq-data:

@@ -1,0 +1,4160 @@
+basePath: /
+definitions:
+  admin.DictsVO:
+    properties:
+      banquet_types:
+        items:
+          type: string
+        type: array
+      cuisines:
+        items:
+          type: string
+        type: array
+      order_status:
+        additionalProperties:
+          type: string
+        type: object
+      purchase_status:
+        additionalProperties:
+          type: string
+        type: object
+    type: object
+  admin.LoginReq:
+    properties:
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+      username:
+        maxLength: 32
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  admin.LoginResult:
+    properties:
+      role:
+        type: string
+      token:
+        type: string
+    type: object
+  admin.MeVO:
+    properties:
+      id:
+        type: integer
+      real_name:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  admin.OperationLog:
+    properties:
+      action:
+        type: string
+      admin_id:
+        type: integer
+      created_at:
+        type: string
+      detail:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      target_id:
+        type: integer
+      target_type:
+        type: string
+    type: object
+  admin.Role:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      permissions:
+        type: string
+    type: object
+  chef.ApplyReq:
+    properties:
+      cuisines:
+        maxLength: 128
+        type: string
+      experience:
+        type: string
+      phone:
+        maxLength: 20
+        type: string
+      real_name:
+        maxLength: 32
+        type: string
+      region:
+        maxLength: 64
+        type: string
+    required:
+    - cuisines
+    - phone
+    - real_name
+    - region
+    type: object
+  chef.AuditReq:
+    properties:
+      approve:
+        type: boolean
+      remark:
+        description: 驳回原因
+        type: string
+    type: object
+  chef.ChefCase:
+    properties:
+      chef_id:
+        type: integer
+      cover:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      images:
+        description: JSON 数组字符串
+        type: string
+      sort:
+        type: integer
+      title:
+        type: string
+    type: object
+  chef.ChefDetailVO:
+    properties:
+      cases:
+        items:
+          $ref: '#/definitions/chef.ChefCase'
+        type: array
+      chef:
+        $ref: '#/definitions/chef.Chefs'
+      packages:
+        items:
+          $ref: '#/definitions/chef.Package'
+        type: array
+    type: object
+  chef.ChefSchedule:
+    properties:
+      chef_id:
+        type: integer
+      created_at:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      order_id:
+        description: 0=未关联订单
+        type: integer
+      status:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  chef.ChefStatsVO:
+    properties:
+      pending:
+        type: integer
+      total:
+        type: integer
+    type: object
+  chef.Chefs:
+    properties:
+      audit_remark:
+        type: string
+      created_at:
+        type: string
+      cuisines:
+        description: CSV，如 "川菜,家常菜"
+        type: string
+      experience:
+        type: string
+      id:
+        type: integer
+      order_count:
+        type: integer
+      phone:
+        type: string
+      rating:
+        description: 0-5，MQ 异步重算
+        type: number
+      real_name:
+        type: string
+      region:
+        type: string
+      status:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  chef.Package:
+    properties:
+      banquet_type:
+        description: 婚宴/寿宴/白事/满月/节庆
+        type: string
+      chef_id:
+        type: integer
+      created_at:
+        type: string
+      dishes:
+        description: JSON 数组 [{name,category}]
+        type: string
+      id:
+        type: integer
+      min_tables:
+        type: integer
+      name:
+        type: string
+      price_per_table:
+        description: 分/桌
+        type: integer
+      sort:
+        type: integer
+      status:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  chef.PackageReq:
+    properties:
+      banquet_type:
+        maxLength: 16
+        type: string
+      dishes:
+        description: JSON 数组字符串 [{name,category}]
+        type: string
+      id:
+        description: '>0 视为更新（PUT /chef/packages/:id 时由路径参数覆盖）'
+        type: integer
+      min_tables:
+        minimum: 0
+        type: integer
+      name:
+        maxLength: 64
+        type: string
+      price_per_table:
+        minimum: 0
+        type: integer
+      sort:
+        type: integer
+      status:
+        description: 1上架 0下架；创建未传默认上架，更新按传值
+        type: integer
+    required:
+    - banquet_type
+    - name
+    type: object
+  chef.RestDaysReq:
+    properties:
+      dates:
+        description: yyyy-MM-dd
+        items:
+          type: string
+        minItems: 1
+        type: array
+      rest:
+        description: true 标休息日，false 恢复可约
+        type: boolean
+    required:
+    - dates
+    type: object
+  chef.UpdateReq:
+    properties:
+      cuisines:
+        maxLength: 128
+        type: string
+      experience:
+        type: string
+      phone:
+        maxLength: 20
+        type: string
+      real_name:
+        maxLength: 32
+        type: string
+      region:
+        maxLength: 64
+        type: string
+    type: object
+  chef.WorkbenchVO:
+    properties:
+      month_income:
+        description: 本月净结算收入（分），来自 pay 模块结算单汇总
+        type: integer
+      pending_orders:
+        type: integer
+      today_orders:
+        type: integer
+    type: object
+  food.CreatePurchaseReq:
+    properties:
+      deliver_address:
+        maxLength: 255
+        type: string
+      deliver_time:
+        type: string
+      fulfill_method:
+        enum:
+        - 1
+        - 2
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/food.PurchaseItemReq'
+        minItems: 1
+        type: array
+      order_id:
+        type: integer
+      remark:
+        maxLength: 255
+        type: string
+      supplier_id:
+        minimum: 1
+        type: integer
+    required:
+    - fulfill_method
+    - items
+    - supplier_id
+    type: object
+  food.CreatePurchaseResp:
+    properties:
+      params:
+        $ref: '#/definitions/wxpay.PayParams'
+      payment_no:
+        type: string
+      purchase_id:
+        type: integer
+      purchase_no:
+        type: string
+      total_amount:
+        type: integer
+    type: object
+  food.IngredientReq:
+    properties:
+      category:
+        maxLength: 32
+        type: string
+      images:
+        items:
+          type: string
+        type: array
+      name:
+        maxLength: 64
+        type: string
+      origin:
+        maxLength: 64
+        type: string
+      price:
+        description: 分
+        minimum: 1
+        type: integer
+      stock:
+        minimum: 0
+        type: integer
+      unit:
+        maxLength: 16
+        type: string
+    required:
+    - category
+    - name
+    - price
+    - unit
+    type: object
+  food.IngredientVO:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      images:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      origin:
+        type: string
+      price:
+        type: integer
+      status:
+        type: integer
+      stock:
+        type: integer
+      supplier_id:
+        type: integer
+      unit:
+        type: string
+    type: object
+  food.PurchaseItemReq:
+    properties:
+      ingredient_id:
+        minimum: 1
+        type: integer
+      quantity:
+        minimum: 1
+        type: integer
+    required:
+    - ingredient_id
+    - quantity
+    type: object
+  food.PurchaseItemVO:
+    properties:
+      id:
+        type: integer
+      ingredient_id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: integer
+      quantity:
+        type: integer
+      subtotal:
+        type: integer
+      unit:
+        type: string
+    type: object
+  food.PurchaseOrderVO:
+    properties:
+      chef_id:
+        type: integer
+      created_at:
+        type: string
+      deliver_address:
+        type: string
+      deliver_time:
+        type: string
+      fulfill_method:
+        type: integer
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/food.PurchaseItemVO'
+        type: array
+      order_id:
+        type: integer
+      paid_amount:
+        type: integer
+      pickup_address:
+        type: string
+      purchase_no:
+        type: string
+      remark:
+        type: string
+      status:
+        type: integer
+      supplier_id:
+        type: integer
+      supplier_name:
+        type: string
+      total_amount:
+        type: integer
+    type: object
+  food.PurchaseStatsVO:
+    properties:
+      by_fulfill:
+        additionalProperties:
+          format: int64
+          type: integer
+        description: 1 自取单量 2 送货单量
+        type: object
+      completed:
+        type: integer
+      gmv:
+        description: 已支付采购总金额，分
+        type: integer
+      pending:
+        type: integer
+      total:
+        type: integer
+    type: object
+  food.RejectReq:
+    properties:
+      reason:
+        maxLength: 255
+        type: string
+    required:
+    - reason
+    type: object
+  order.AfterSale:
+    properties:
+      after_no:
+        type: string
+      amount:
+        type: integer
+      audit_remark:
+        type: string
+      chef_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      images:
+        type: string
+      order_id:
+        type: integer
+      reason:
+        type: string
+      status:
+        description: 0 待审核 1 已同意待退款 2 已拒绝 3 已退款
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  order.AfterSaleReq:
+    properties:
+      amount:
+        minimum: 1
+        type: integer
+      images:
+        items:
+          type: string
+        maxItems: 9
+        type: array
+      reason:
+        maxLength: 255
+        type: string
+    required:
+    - amount
+    - reason
+    type: object
+  order.AuditReq:
+    properties:
+      approve:
+        type: boolean
+      remark:
+        maxLength: 255
+        type: string
+    type: object
+  order.CreateReq:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      banquet_time:
+        description: 2006-01-02 15:04:05 / RFC3339 / 2006-01-02
+        type: string
+      banquet_type:
+        maxLength: 16
+        type: string
+      chef_id:
+        type: integer
+      contact_name:
+        maxLength: 32
+        type: string
+      contact_phone:
+        type: string
+      menu_remark:
+        maxLength: 255
+        type: string
+      package_id:
+        type: integer
+      pay_type:
+        description: 1 定金 2 全款
+        enum:
+        - 1
+        - 2
+        type: integer
+      people_count:
+        maximum: 9999
+        minimum: 1
+        type: integer
+      region:
+        maxLength: 64
+        type: string
+      table_count:
+        maximum: 999
+        minimum: 1
+        type: integer
+      user_coupon_id:
+        type: integer
+    required:
+    - address
+    - banquet_time
+    - banquet_type
+    - chef_id
+    - contact_name
+    - contact_phone
+    - package_id
+    - pay_type
+    - people_count
+    - region
+    - table_count
+    type: object
+  order.CreateResp:
+    properties:
+      deposit:
+        description: 本次支付金额（分）
+        type: integer
+      order_id:
+        type: integer
+      order_no:
+        type: string
+      params:
+        $ref: '#/definitions/wxpay.PayParams'
+      payment_no:
+        type: string
+    type: object
+  order.OrderDetail:
+    properties:
+      address:
+        description: 地址快照
+        type: string
+      after_sales:
+        items:
+          $ref: '#/definitions/order.AfterSale'
+        type: array
+      amount:
+        description: 应付总额 = 套餐单价×桌数 - 券
+        type: integer
+      banquet_time:
+        type: string
+      banquet_type:
+        type: string
+      cancel_reason:
+        type: string
+      chef_id:
+        type: integer
+      contact_name:
+        type: string
+      contact_phone:
+        type: string
+      created_at:
+        type: string
+      deposit:
+        description: 下单时应付定金/全款
+        type: integer
+      id:
+        type: integer
+      menu_remark:
+        type: string
+      order_no:
+        type: string
+      package_id:
+        type: integer
+      package_name:
+        type: string
+      paid_amount:
+        description: 实付累计
+        type: integer
+      pay_type:
+        description: 1 定金 2 全款
+        type: integer
+      people_count:
+        type: integer
+      refund_status:
+        type: integer
+      region:
+        type: string
+      review:
+        $ref: '#/definitions/order.Review'
+      status:
+        type: integer
+      table_count:
+        type: integer
+      updated_at:
+        type: string
+      user_coupon_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  order.OrderStatsVO:
+    properties:
+      completed:
+        description: 已完成
+        type: integer
+      gmv:
+        description: 已支付总额（payments 口径）
+        type: integer
+      pending:
+        description: 待接单
+        type: integer
+      regions:
+        items:
+          $ref: '#/definitions/order.RegionCount'
+        type: array
+      repurchase_rate:
+        type: number
+      total:
+        type: integer
+    type: object
+  order.OrderVO:
+    properties:
+      address:
+        description: 地址快照
+        type: string
+      amount:
+        description: 应付总额 = 套餐单价×桌数 - 券
+        type: integer
+      banquet_time:
+        type: string
+      banquet_type:
+        type: string
+      cancel_reason:
+        type: string
+      chef_id:
+        type: integer
+      contact_name:
+        type: string
+      contact_phone:
+        type: string
+      created_at:
+        type: string
+      deposit:
+        description: 下单时应付定金/全款
+        type: integer
+      id:
+        type: integer
+      menu_remark:
+        type: string
+      order_no:
+        type: string
+      package_id:
+        type: integer
+      package_name:
+        type: string
+      paid_amount:
+        description: 实付累计
+        type: integer
+      pay_type:
+        description: 1 定金 2 全款
+        type: integer
+      people_count:
+        type: integer
+      refund_status:
+        type: integer
+      region:
+        type: string
+      status:
+        type: integer
+      table_count:
+        type: integer
+      updated_at:
+        type: string
+      user_coupon_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  order.RegionCount:
+    properties:
+      count:
+        type: integer
+      region:
+        type: string
+    type: object
+  order.RejectReq:
+    properties:
+      reason:
+        maxLength: 255
+        type: string
+    required:
+    - reason
+    type: object
+  order.Review:
+    properties:
+      chef_id:
+        type: integer
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      images:
+        description: JSON 数组字符串
+        type: string
+      order_id:
+        type: integer
+      rating:
+        description: 1-5
+        type: integer
+      reply:
+        type: string
+      reply_at:
+        type: string
+      status:
+        description: 1 显示 0 隐藏（管理端隐藏用）
+        type: integer
+      tags:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  order.ReviewReq:
+    properties:
+      content:
+        maxLength: 500
+        type: string
+      images:
+        items:
+          type: string
+        maxItems: 9
+        type: array
+      rating:
+        maximum: 5
+        minimum: 1
+        type: integer
+      tags:
+        items:
+          type: string
+        maxItems: 10
+        type: array
+    required:
+    - rating
+    type: object
+  order.ReviewStatusReq:
+    properties:
+      status:
+        type: integer
+    required:
+    - status
+    type: object
+  pay.AuditReq:
+    properties:
+      approve:
+        type: boolean
+      remark:
+        maxLength: 255
+        type: string
+    type: object
+  pay.FinanceStatsVO:
+    properties:
+      gmv:
+        type: integer
+      settlement_amount:
+        type: integer
+      settlement_count:
+        type: integer
+      withdraw_pending:
+        type: integer
+    type: object
+  pay.IncomeVO:
+    properties:
+      available:
+        type: integer
+      frozen_amount:
+        description: 冻结中：未满冻结期（T+N 自动解冻为可提）
+        type: integer
+      month_net:
+        type: integer
+      total_net:
+        type: integer
+      total_withdrawn:
+        type: integer
+    type: object
+  pay.SettingsReq:
+    properties:
+      chef_bp:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      supplier_bp:
+        maximum: 10000
+        minimum: 0
+        type: integer
+    type: object
+  pay.SettingsVO:
+    properties:
+      chef_bp:
+        type: integer
+      supplier_bp:
+        type: integer
+    type: object
+  pay.Settlement:
+    properties:
+      biz_no:
+        type: string
+      commission_amount:
+        type: integer
+      created_at:
+        type: string
+      gross_amount:
+        type: integer
+      id:
+        type: integer
+      net_amount:
+        type: integer
+      role:
+        description: 1乡厨 2供应商
+        type: integer
+      settle_no:
+        type: string
+      settle_time:
+        type: string
+      status:
+        description: 0待结算 1已结算
+        type: integer
+      target_id:
+        type: integer
+    type: object
+  pay.WithdrawApplyReq:
+    properties:
+      amount:
+        description: 分
+        type: integer
+    required:
+    - amount
+    type: object
+  pay.Withdrawal:
+    properties:
+      amount:
+        type: integer
+      applied_at:
+        type: string
+      audit_remark:
+        type: string
+      audited_at:
+        type: string
+      channel:
+        description: 1线下 2微信
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      paid_at:
+        type: string
+      role:
+        description: 1乡厨 2供应商
+        type: integer
+      status:
+        description: 0待审核 1已通过待打款 2已拒绝 3已打款
+        type: integer
+      target_id:
+        type: integer
+      updated_at:
+        type: string
+      withdraw_no:
+        type: string
+    type: object
+  response.PageList:
+    properties:
+      list: {}
+      page:
+        type: integer
+      size:
+        type: integer
+      total:
+        type: integer
+    type: object
+  response.R:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  supplier.ApplyReq:
+    properties:
+      address:
+        maxLength: 255
+        type: string
+      categories:
+        description: 经营品类，逗号分隔
+        maxLength: 128
+        type: string
+      contact:
+        maxLength: 32
+        type: string
+      license:
+        description: 营业执照/资质图片 URL
+        maxLength: 255
+        type: string
+      name:
+        maxLength: 64
+        type: string
+      phone:
+        type: string
+      region:
+        maxLength: 64
+        type: string
+    required:
+    - address
+    - contact
+    - license
+    - name
+    - phone
+    type: object
+  supplier.AuditReq:
+    properties:
+      approve:
+        type: boolean
+      remark:
+        maxLength: 255
+        type: string
+    type: object
+  supplier.Supplier:
+    properties:
+      address:
+        type: string
+      audit_remark:
+        type: string
+      categories:
+        description: 逗号分隔，如 "蔬菜,肉类"
+        type: string
+      contact:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      license:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      rating:
+        type: number
+      region:
+        type: string
+      status:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  supplier.SupplierStatsVO:
+    properties:
+      pending:
+        type: integer
+      total:
+        type: integer
+    type: object
+  user.AddressReq:
+    properties:
+      address:
+        type: string
+      contact_name:
+        type: string
+      contact_phone:
+        type: string
+      is_default:
+        type: boolean
+      region:
+        type: string
+    required:
+    - address
+    - contact_name
+    - contact_phone
+    type: object
+  user.AdminUserVO:
+    properties:
+      avatar:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      nickname:
+        type: string
+      phone:
+        type: string
+      roles:
+        description: chef/supplier，均无则 ["user"]
+        items:
+          type: string
+        type: array
+      status:
+        type: integer
+    type: object
+  user.CouponVO:
+    properties:
+      amount:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      threshold:
+        type: integer
+      type:
+        type: integer
+      valid_to:
+        type: string
+    type: object
+  user.LoginByCodeReq:
+    properties:
+      code:
+        type: string
+      phone:
+        type: string
+    required:
+    - code
+    - phone
+    type: object
+  user.LoginResult:
+    properties:
+      is_new:
+        type: boolean
+      role:
+        type: string
+      token:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  user.ProfileVO:
+    properties:
+      avatar:
+        type: string
+      id:
+        type: integer
+      nickname:
+        type: string
+      phone:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+    type: object
+  user.RefreshReq:
+    properties:
+      role:
+        type: string
+    type: object
+  user.SetPasswordReq:
+    properties:
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+    required:
+    - password
+    type: object
+  user.SmsCodeReq:
+    properties:
+      phone:
+        type: string
+    required:
+    - phone
+    type: object
+  user.StatusReq:
+    properties:
+      status:
+        type: integer
+    required:
+    - status
+    type: object
+  user.UpdateProfileReq:
+    properties:
+      avatar:
+        type: string
+      nickname:
+        type: string
+    type: object
+  user.UserAddress:
+    properties:
+      address:
+        type: string
+      contact_name:
+        type: string
+      contact_phone:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      is_default:
+        type: boolean
+      region:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  user.UserCouponVO:
+    properties:
+      amount:
+        type: integer
+      coupon_id:
+        type: integer
+      expire_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: integer
+      threshold:
+        type: integer
+      type:
+        type: integer
+    type: object
+  user.WebLoginReq:
+    properties:
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+      phone:
+        type: string
+    required:
+    - password
+    - phone
+    type: object
+  user.WxLoginReq:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  wxpay.PayParams:
+    properties:
+      app_id:
+        type: string
+      mock:
+        type: boolean
+      nonce_str:
+        type: string
+      package:
+        type: string
+      pay_sign:
+        type: string
+      payment_no:
+        type: string
+      time_stamp:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 乡厨宴席服务平台后端。统一返回 HTTP 200 + 业务码信封 {code, msg, data}：code=0 成功，40xxx
+    业务错误（40000 参数 / 40100 未登录 / 40300 无权限 / 40400 不存在 / 40900 状态冲突），50000 服务错误。金额单位为分，费率单位为基点
+    BP（3%=300）。user 组接口同时接受 user/chef/supplier 三种 token。
+  title: 乡厨系统 API
+  version: "1.0"
+paths:
+  /admin/aftersales:
+    get:
+      description: admin 角色；status 0待审核 1已同意 2已拒绝 3已退款
+      parameters:
+      - description: 状态筛选
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/order.AfterSale'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 售后申请列表
+      tags:
+      - 管理端
+  /admin/aftersales/{id}/audit:
+    post:
+      consumes:
+      - application/json
+      description: admin 角色；同意后走原路退款
+      parameters:
+      - description: 售后单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 审核结果
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/order.AuditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 售后审核
+      tags:
+      - 管理端
+  /admin/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 仅平台管理员（admins 表），用户名+密码
+      parameters:
+      - description: 账号密码
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/admin.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.LoginResult'
+              type: object
+      summary: 后台登录
+      tags:
+      - 管理端
+  /admin/chefs:
+    get:
+      description: admin 角色；含全部审核状态
+      parameters:
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 0待审核 1已通过 2已拒绝 3已禁用
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/chef.Chefs'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 乡厨列表
+      tags:
+      - 管理端
+  /admin/chefs/{id}/audit:
+    post:
+      consumes:
+      - application/json
+      description: admin 角色；驳回需附 remark
+      parameters:
+      - description: 乡厨ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 审核结果
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/chef.AuditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 乡厨入驻审核
+      tags:
+      - 管理端
+  /admin/chefs/stats:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/chef.ChefStatsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 乡厨统计
+      tags:
+      - 管理端
+  /admin/dicts:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.DictsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 平台字典
+      tags:
+      - 管理端
+  /admin/finance-stats:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/pay.FinanceStatsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 财务总览看板
+      tags:
+      - 管理端
+  /admin/me:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/admin.MeVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的信息
+      tags:
+      - 管理端
+  /admin/oper-logs:
+    get:
+      description: admin 角色；仅覆盖 admin 模块自身路由的变更操作
+      parameters:
+      - description: 管理员ID
+        in: query
+        name: admin_id
+        type: integer
+      - description: 动作，如 POST /admin/chefs/12/audit
+        in: query
+        name: action
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/admin.OperationLog'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 操作日志
+      tags:
+      - 管理端
+  /admin/orders:
+    get:
+      description: admin 角色
+      parameters:
+      - description: 状态筛选：1待接单 2已接单 3备菜中 4服务中 5已完成 6已取消 7已拒绝
+        in: query
+        name: status
+        type: integer
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/order.OrderVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 订单监控列表
+      tags:
+      - 管理端
+  /admin/orders/{id}:
+    get:
+      description: admin 角色
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/order.OrderDetail'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 订单详情
+      tags:
+      - 管理端
+  /admin/purchases:
+    get:
+      description: admin 角色
+      parameters:
+      - description: 状态筛选：0待接单 1备货中 2待自取/待送达 3已完成 4已取消
+        in: query
+        name: status
+        type: integer
+      - description: 履约方式
+        enum:
+        - 1
+        - 2
+        in: query
+        name: fulfill_method
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/food.PurchaseOrderVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 采购单监控列表
+      tags:
+      - 管理端
+  /admin/purchases/fulfill-stats:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/food.PurchaseStatsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 采购履约统计
+      tags:
+      - 管理端
+  /admin/reviews:
+    get:
+      description: admin 角色
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/order.Review'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 评价列表
+      tags:
+      - 管理端
+  /admin/reviews/{id}/status:
+    post:
+      consumes:
+      - application/json
+      description: admin 角色
+      parameters:
+      - description: 评价ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 状态
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/order.ReviewStatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 隐藏/恢复评价
+      tags:
+      - 管理端
+  /admin/roles:
+    get:
+      description: admin 角色；一期权限硬编码，仅展示预留
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/admin.Role'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 角色列表
+      tags:
+      - 管理端
+  /admin/settings:
+    get:
+      description: admin 角色；BP 计价，1% = 100
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/pay.SettingsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 查询佣金费率
+      tags:
+      - 管理端
+    put:
+      consumes:
+      - application/json
+      description: admin 角色；BP 取值 0-10000
+      parameters:
+      - description: 乡厨/供应商费率（BP）
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/pay.SettingsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 修改佣金费率
+      tags:
+      - 管理端
+  /admin/settlements:
+    get:
+      description: admin 角色；role 1乡厨 2供应商
+      parameters:
+      - description: 结算对象角色
+        enum:
+        - 1
+        - 2
+        in: query
+        name: role
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/pay.Settlement'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 结算单列表
+      tags:
+      - 管理端
+  /admin/stats:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/order.OrderStatsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 订单统计看板
+      tags:
+      - 管理端
+  /admin/suppliers:
+    get:
+      description: admin 角色；含全部审核状态
+      parameters:
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 0待审核 1已通过 2已拒绝 3已禁用
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/supplier.Supplier'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 供应商列表
+      tags:
+      - 管理端
+  /admin/suppliers/{id}/audit:
+    post:
+      consumes:
+      - application/json
+      description: admin 角色；驳回需附 remark
+      parameters:
+      - description: 供应商ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 审核结果
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/supplier.AuditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 供应商入驻审核
+      tags:
+      - 管理端
+  /admin/suppliers/stats:
+    get:
+      description: admin 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/supplier.SupplierStatsVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 供应商统计
+      tags:
+      - 管理端
+  /admin/users:
+    get:
+      description: admin 角色
+      parameters:
+      - description: 手机号/昵称关键词
+        in: query
+        name: keyword
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/user.AdminUserVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 用户列表
+      tags:
+      - 管理端
+  /admin/users/{id}/status:
+    post:
+      consumes:
+      - application/json
+      description: admin 角色
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 状态
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.StatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 禁用/启用用户
+      tags:
+      - 管理端
+  /admin/withdrawals:
+    get:
+      description: admin 角色；role 1乡厨 2供应商，status 0待审核 1通过 2拒绝 3已打款
+      parameters:
+      - description: 提现人角色
+        enum:
+        - 1
+        - 2
+        in: query
+        name: role
+        type: integer
+      - description: 状态筛选
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/pay.Withdrawal'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 提现单列表
+      tags:
+      - 管理端
+  /admin/withdrawals/{id}/audit:
+    post:
+      consumes:
+      - application/json
+      description: admin 角色；驳回需附 remark
+      parameters:
+      - description: 提现单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 审核结果
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/pay.AuditReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 提现审核
+      tags:
+      - 管理端
+  /admin/withdrawals/{id}/mark-paid:
+    post:
+      description: admin 角色；一期线下转账后人工标记
+      parameters:
+      - description: 提现单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 标记已打款
+      tags:
+      - 管理端
+  /chef/apply:
+    post:
+      consumes:
+      - application/json
+      description: 任何登录用户可提交（含被驳回后重新提交），审核通过后签发 chef 角色
+      parameters:
+      - description: 入驻材料
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/chef.ApplyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 入驻申请/重新提交
+      tags:
+      - 乡厨域
+  /chef/apply-status:
+    get:
+      description: GET /chef/apply-status（user 角色，查申请审核状态）与 GET /chef/profile（chef
+        角色）共用
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/chef.Chefs'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的档案 / 申请进度
+      tags:
+      - 乡厨域
+  /chef/income:
+    get:
+      description: chef 角色；金额均为分
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/pay.IncomeVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 乡厨收入总览
+      tags:
+      - 财务域
+  /chef/orders:
+    get:
+      description: chef 角色
+      parameters:
+      - description: 状态筛选：1待接单 2已接单 3备菜中 4服务中 5已完成 6已取消 7已拒绝
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/order.OrderVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 乡厨订单列表
+      tags:
+      - 订单域
+  /chef/orders/{id}:
+    get:
+      description: chef 角色
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/order.OrderDetail'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 乡厨订单详情
+      tags:
+      - 订单域
+  /chef/orders/{id}/accept:
+    post:
+      description: chef 角色；待接单(1)→已接单(2)，锁定档期
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 接单
+      tags:
+      - 订单域
+  /chef/orders/{id}/complete:
+    post:
+      description: chef 角色；服务中(4)→已完成(5)，触发乡厨结算与评分重算
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 完成订单
+      tags:
+      - 订单域
+  /chef/orders/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: chef 角色；待接单(1)→已拒绝(7)，自动全额原路退款
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 拒单原因
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/order.RejectReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 拒单
+      tags:
+      - 订单域
+  /chef/orders/{id}/start-prep:
+    post:
+      description: chef 角色；已接单(2)→备菜中(3)
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 开始备菜
+      tags:
+      - 订单域
+  /chef/orders/{id}/start-service:
+    post:
+      description: chef 角色；备菜中(3)→服务中(4)
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 开席服务
+      tags:
+      - 订单域
+  /chef/packages:
+    get:
+      description: chef 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/chef.Package'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的套餐列表
+      tags:
+      - 乡厨域
+    post:
+      consumes:
+      - application/json
+      description: chef 角色；金额单位分
+      parameters:
+      - description: 套餐
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/chef.PackageReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: data.id=套餐ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    format: int64
+                    type: integer
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 新建套餐
+      tags:
+      - 乡厨域
+  /chef/packages/{id}:
+    delete:
+      description: chef 角色
+      parameters:
+      - description: 套餐ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 删除套餐
+      tags:
+      - 乡厨域
+    put:
+      consumes:
+      - application/json
+      description: chef 角色
+      parameters:
+      - description: 套餐ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 套餐
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/chef.PackageReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 更新套餐
+      tags:
+      - 乡厨域
+  /chef/profile:
+    get:
+      description: GET /chef/apply-status（user 角色，查申请审核状态）与 GET /chef/profile（chef
+        角色）共用
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/chef.Chefs'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的档案 / 申请进度
+      tags:
+      - 乡厨域
+    put:
+      consumes:
+      - application/json
+      description: chef 角色；空字段不更新
+      parameters:
+      - description: 资料
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/chef.UpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 维护我的资料
+      tags:
+      - 乡厨域
+  /chef/schedules:
+    get:
+      description: chef 角色；from 默认今天，to 默认 +30 天
+      parameters:
+      - description: 起始日 yyyy-MM-dd
+        in: query
+        name: from
+        type: string
+      - description: 结束日 yyyy-MM-dd
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/chef.ChefSchedule'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的档期日历
+      tags:
+      - 乡厨域
+  /chef/schedules/rest-days:
+    put:
+      consumes:
+      - application/json
+      description: chef 角色；已锁档期不可标休
+      parameters:
+      - description: 日期列表 + 是否休息
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/chef.RestDaysReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 标记/取消休息日
+      tags:
+      - 乡厨域
+  /chef/withdrawals:
+    get:
+      description: chef 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/pay.Withdrawal'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 提现记录
+      tags:
+      - 财务域
+    post:
+      consumes:
+      - application/json
+      description: chef 角色；一期线下打款，admin 审核后标记
+      parameters:
+      - description: 金额（分）
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/pay.WithdrawApplyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 发起提现
+      tags:
+      - 财务域
+  /chef/workbench:
+    get:
+      description: chef 角色；今日订单数/待接单数/本月净结算收入（分）
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/chef.WorkbenchVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 工作台
+      tags:
+      - 乡厨域
+  /chefs:
+    get:
+      parameters:
+      - description: 区域，模糊匹配
+        in: query
+        name: region
+        type: string
+      - description: 菜系，FIND_IN_SET 命中
+        in: query
+        name: cuisine
+        type: string
+      - description: 关键词（姓名/手机号）
+        in: query
+        name: keyword
+        type: string
+      - description: 最低评分
+        in: query
+        name: min_rating
+        type: number
+      - description: 排序
+        enum:
+        - rating_desc
+        - order_count_desc
+        in: query
+        name: order_by
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/chef.Chefs'
+                        type: array
+                    type: object
+              type: object
+      summary: 乡厨列表（公开）
+      tags:
+      - 乡厨域
+  /chefs/{id}:
+    get:
+      description: 含套餐与案例；评价走 GET /chefs/{id}/reviews
+      parameters:
+      - description: 乡厨ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/chef.ChefDetailVO'
+              type: object
+      summary: 乡厨详情（公开）
+      tags:
+      - 乡厨域
+  /chefs/{id}/reviews:
+    get:
+      parameters:
+      - description: 乡厨ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/order.Review'
+                        type: array
+                    type: object
+              type: object
+      summary: 乡厨评价列表（公开）
+      tags:
+      - 乡厨域
+  /chefs/{id}/schedules:
+    get:
+      description: 0可约 1已锁 2休息；from 默认今天，to 默认 +30 天
+      parameters:
+      - description: 乡厨ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 起始日 yyyy-MM-dd
+        in: query
+        name: from
+        type: string
+      - description: 结束日 yyyy-MM-dd
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/chef.ChefSchedule'
+                  type: array
+              type: object
+      summary: 档期日历（公开）
+      tags:
+      - 乡厨域
+  /coupons:
+    get:
+      parameters:
+      - default: "1"
+        description: 仅有效券
+        enum:
+        - "0"
+        - "1"
+        in: query
+        name: only_active
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/user.CouponVO'
+                        type: array
+                    type: object
+              type: object
+      summary: 券中心列表（公开）
+      tags:
+      - 用户域
+  /ingredients:
+    get:
+      parameters:
+      - description: 关键词（名称模糊）
+        in: query
+        name: keyword
+        type: string
+      - description: 分类
+        in: query
+        name: category
+        type: string
+      - description: 供应商ID
+        in: query
+        name: supplier_id
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/food.IngredientVO'
+                        type: array
+                    type: object
+              type: object
+      summary: 食材市场列表（公开）
+      tags:
+      - 采购供应域
+  /orders:
+    get:
+      parameters:
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/order.OrderVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的订单列表
+      tags:
+      - 订单域
+    post:
+      consumes:
+      - application/json
+      description: 校验档期后创建订单；pay_type 1定金30% 2全款；返回支付参数
+      parameters:
+      - description: 订单参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/order.CreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/order.CreateResp'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 下单
+      tags:
+      - 订单域
+  /orders/{id}:
+    get:
+      description: 含套餐名、评价与售后记录
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/order.OrderDetail'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 订单详情
+      tags:
+      - 订单域
+  /orders/{id}/aftersale:
+    post:
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 售后申请
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/order.AfterSaleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 申请售后
+      tags:
+      - 订单域
+  /orders/{id}/cancel:
+    post:
+      description: 仅待支付/待接单可取消；已支付原路退款并释放档期
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 取消订单
+      tags:
+      - 订单域
+  /orders/{id}/pay-balance:
+    post:
+      description: 宴席结束后补付尾款，返回支付参数
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/order.CreateResp'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 补尾款
+      tags:
+      - 订单域
+  /orders/{id}/review:
+    post:
+      consumes:
+      - application/json
+      description: 仅已完成订单，完成后 7 天内，一单一评
+      parameters:
+      - description: 订单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 评价
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/order.ReviewReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 评价
+      tags:
+      - 订单域
+  /pay/mock/{paymentNo}:
+    post:
+      description: 开发联调用，等价于微信回调成功；触发业务侧支付成功处理（锁档期/锁库存等）
+      parameters:
+      - description: 支付单号
+        in: path
+        name: paymentNo
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: string
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 模拟支付成功（dev）
+      tags:
+      - 财务域
+  /pay/notify/wx:
+    post:
+      consumes:
+      - application/json
+      description: 微信服务器调用，不走鉴权、非 R 信封；按 V3 规范应答 SUCCESS/FAIL。真实模式验签+解密（平台证书 + APIv3
+        key），mock 模式接受明文 JSON
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{code:SUCCESS|FAIL, message}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: 微信支付回调
+      tags:
+      - 财务域
+  /purchases:
+    get:
+      description: chef 角色；状态 0待接单 1备货中 2待自取/待送达 3已完成 4已取消
+      parameters:
+      - description: 状态筛选
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/food.PurchaseOrderVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的采购单列表
+      tags:
+      - 采购供应域
+    post:
+      consumes:
+      - application/json
+      description: chef 角色；fulfill_method 1自取 2送货（送货必填送货地址与期望送达时间）；order_id>0 关联宴席订单；返回支付参数
+      parameters:
+      - description: 采购参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/food.CreatePurchaseReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/food.CreatePurchaseResp'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 采购下单
+      tags:
+      - 采购供应域
+  /purchases/{id}:
+    get:
+      description: chef 角色；含明细
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/food.PurchaseOrderVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 采购单详情
+      tags:
+      - 采购供应域
+  /purchases/{id}/cancel:
+    post:
+      description: chef 角色；仅待接单可取消，供应商已接单锁库需双方沟通后由供应商处理
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 取消采购单
+      tags:
+      - 采购供应域
+  /supplier/apply:
+    post:
+      consumes:
+      - application/json
+      description: 任何登录用户可提交（含被驳回后重新提交），审核通过后签发 supplier 角色
+      parameters:
+      - description: 入驻材料
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/supplier.ApplyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 入驻申请/重新提交
+      tags:
+      - 采购供应域
+  /supplier/apply-status:
+    get:
+      description: GET /supplier/apply-status（user 角色，查申请审核状态）与 GET /supplier/profile（supplier
+        角色）共用
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/supplier.Supplier'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的档案 / 申请进度
+      tags:
+      - 采购供应域
+  /supplier/income:
+    get:
+      description: supplier 角色；金额均为分
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/pay.IncomeVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 供应商收入总览
+      tags:
+      - 财务域
+  /supplier/ingredients:
+    get:
+      description: supplier 角色；含已下架
+      parameters:
+      - description: 关键词
+        in: query
+        name: keyword
+        type: string
+      - description: 分类
+        in: query
+        name: category
+        type: string
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/food.IngredientVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的食材列表
+      tags:
+      - 采购供应域
+    post:
+      consumes:
+      - application/json
+      description: supplier 角色；金额单位分
+      parameters:
+      - description: 食材参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/food.IngredientReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: data.id=食材ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    format: int64
+                    type: integer
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 新增食材
+      tags:
+      - 采购供应域
+  /supplier/ingredients/{id}:
+    delete:
+      description: supplier 角色
+      parameters:
+      - description: 食材ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 下架食材
+      tags:
+      - 采购供应域
+    put:
+      consumes:
+      - application/json
+      description: supplier 角色；覆盖更新，金额单位分
+      parameters:
+      - description: 食材ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 食材参数
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/food.IngredientReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: data.id=食材ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    format: int64
+                    type: integer
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 编辑食材
+      tags:
+      - 采购供应域
+  /supplier/profile:
+    get:
+      description: GET /supplier/apply-status（user 角色，查申请审核状态）与 GET /supplier/profile（supplier
+        角色）共用
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/supplier.Supplier'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的档案 / 申请进度
+      tags:
+      - 采购供应域
+    put:
+      consumes:
+      - application/json
+      description: supplier 角色
+      parameters:
+      - description: 资料
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/supplier.ApplyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 维护我的资料
+      tags:
+      - 采购供应域
+  /supplier/purchases:
+    get:
+      description: supplier 角色
+      parameters:
+      - description: 状态筛选：0待接单 1备货中 2待自取/待送达 3已完成 4已取消
+        in: query
+        name: status
+        type: integer
+      - default: 1
+        description: 页码
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: 每页条数
+        in: query
+        maximum: 100
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/response.PageList'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/food.PurchaseOrderVO'
+                        type: array
+                    type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 待履约采购单列表
+      tags:
+      - 采购供应域
+  /supplier/purchases/{id}:
+    get:
+      description: supplier 角色；含明细
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/food.PurchaseOrderVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 采购单详情
+      tags:
+      - 采购供应域
+  /supplier/purchases/{id}/accept:
+    post:
+      description: supplier 角色；待接单(0)→备货中(1)，锁定 locked_stock，库存不足拒单
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 接单
+      tags:
+      - 采购供应域
+  /supplier/purchases/{id}/complete:
+    post:
+      description: supplier 角色；→已完成(3)，按佣金生成供应商结算单
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 完成履约
+      tags:
+      - 采购供应域
+  /supplier/purchases/{id}/ready:
+    post:
+      description: supplier 角色；备货中(1)→待自取/待送达(2)
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 备货完成
+      tags:
+      - 采购供应域
+  /supplier/purchases/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: supplier 角色；仅接单前可拒，库存不足时常用
+      parameters:
+      - description: 采购单ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 拒单原因
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/food.RejectReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    type: boolean
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 拒单
+      tags:
+      - 采购供应域
+  /supplier/withdrawals:
+    get:
+      description: supplier 角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/pay.Withdrawal'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 提现记录
+      tags:
+      - 财务域
+    post:
+      consumes:
+      - application/json
+      description: supplier 角色；一期线下打款，admin 审核后标记
+      parameters:
+      - description: 金额（分）
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/pay.WithdrawApplyReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 发起提现
+      tags:
+      - 财务域
+  /user/addresses:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/user.UserAddress'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 地址簿列表
+      tags:
+      - 用户域
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 地址
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.AddressReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: data.id=地址ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    format: int64
+                    type: integer
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 新增/修改地址
+      tags:
+      - 用户域
+  /user/addresses/{id}:
+    delete:
+      parameters:
+      - description: 地址ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 删除地址
+      tags:
+      - 用户域
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 地址ID（修改时必传）
+        in: path
+        name: id
+        type: integer
+      - description: 地址
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.AddressReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: data.id=地址ID
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  additionalProperties:
+                    format: int64
+                    type: integer
+                  type: object
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 新增/修改地址
+      tags:
+      - 用户域
+  /user/auth/code:
+    post:
+      consumes:
+      - application/json
+      description: dev 模式验证码固定 123456，仅输出日志
+      parameters:
+      - description: 手机号
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.SmsCodeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      summary: 发送验证码
+      tags:
+      - 用户域
+  /user/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: 未注册自动注册；乡厨/供应商双身份按档案状态签发对应角色 JWT
+      parameters:
+      - description: 手机号+验证码
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginByCodeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: data.token 为 JWT
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.LoginResult'
+              type: object
+      summary: 手机号验证码登录
+      tags:
+      - 用户域
+  /user/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: 入驻审核通过/驳回后换发含最新角色的 JWT。body 可选：双身份账号传期望角色（chef/supplier）
+      parameters:
+      - description: 期望角色（可空 body）
+        in: body
+        name: req
+        schema:
+          $ref: '#/definitions/user.RefreshReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.LoginResult'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 换发 token（角色变更后调用）
+      tags:
+      - 用户域
+  /user/auth/web:
+    post:
+      consumes:
+      - application/json
+      description: 校验存在已审核通过的 chef/supplier 档案后签发对应角色 JWT
+      parameters:
+      - description: 手机号+密码
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.WebLoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.LoginResult'
+              type: object
+      summary: Web 后台登录（乡厨/供应商）
+      tags:
+      - 用户域
+  /user/auth/wx:
+    post:
+      consumes:
+      - application/json
+      description: 小程序 wx.login 的 code 换 openid，未注册自动注册
+      parameters:
+      - description: 微信 code
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.WxLoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.LoginResult'
+              type: object
+      summary: 微信授权登录
+      tags:
+      - 用户域
+  /user/coupons:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/user.UserCouponVO'
+                  type: array
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的优惠券
+      tags:
+      - 用户域
+  /user/coupons/{id}/receive:
+    post:
+      parameters:
+      - description: 券ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 领券
+      tags:
+      - 用户域
+  /user/password:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 密码
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.SetPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 设置/修改 Web 登录密码
+      tags:
+      - 用户域
+  /user/profile:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.R'
+            - properties:
+                data:
+                  $ref: '#/definitions/user.ProfileVO'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 我的资料
+      tags:
+      - 用户域
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 资料
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/user.UpdateProfileReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.R'
+      security:
+      - BearerAuth: []
+      summary: 修改昵称/头像
+      tags:
+      - 用户域
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    description: 粘贴 "Bearer {token}"（必须含 Bearer 前缀和空格，后端校验该前缀）。token 由各登录接口返回。
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
+tags:
+- description: 登录/验证码、资料、地址簿、优惠券
+  name: 用户域
+- description: 乡厨列表/详情/档期/套餐/入驻
+  name: 乡厨域
+- description: 宴席订单状态机（0待支付→1待接单→2已接单→3备菜中→4服务中→5已完成，6已取消/7已拒绝）与评价售后
+  name: 订单域
+- description: 食材市场、采购单、供应商履约
+  name: 采购供应域
+- description: 支付回调/模拟支付、结算、提现
+  name: 财务域
+- description: 后台登录、审核、监控、统计、财务配置
+  name: 管理端

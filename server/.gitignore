@@ -1,0 +1,20 @@
+# 编译产物
+/bin/
+/server
+*.exe
+
+# 日志
+/logs/
+*.log
+
+# 本地环境
+.env
+
+# IDE
+.idea/
+.vscode/
+
+# 依赖与前端产物
+node_modules/
+dist/
+unpackage/

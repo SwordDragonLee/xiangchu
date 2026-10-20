@@ -1,0 +1,19 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+# 改动后重新编译（编到 tmp，不污染 bin/）
+cmd = "go build -o ./tmp/server_dev.exe ./cmd/server"
+bin = "./tmp/server_dev.exe"
+args_bin = ["-c", "configs/config.yaml"]
+include_ext = ["go", "yaml", "yml"]
+exclude_dir = ["bin", "tmp", "logs", "docs", "scripts", ".git"]
+# 编译失败时保持旧进程继续跑，控制台显示错误
+stop_on_error = true
+delay = 1000
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = true

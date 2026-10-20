@@ -1,0 +1,23 @@
+-- 000001 回滚：删除全部业务表（schema_migrations 由工具自管理，不动）
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS operation_logs;
+DROP TABLE IF EXISTS admins;
+DROP TABLE IF EXISTS system_settings;
+DROP TABLE IF EXISTS withdrawals;
+DROP TABLE IF EXISTS settlements;
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS purchase_items;
+DROP TABLE IF EXISTS purchase_orders;
+DROP TABLE IF EXISTS ingredients;
+DROP TABLE IF EXISTS suppliers;
+DROP TABLE IF EXISTS after_sales;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS packages;
+DROP TABLE IF EXISTS chef_cases;
+DROP TABLE IF EXISTS chef_schedules;
+DROP TABLE IF EXISTS chefs;
+DROP TABLE IF EXISTS user_coupons;
+DROP TABLE IF EXISTS coupons;
+DROP TABLE IF EXISTS user_addresses;
+DROP TABLE IF EXISTS users;

@@ -1,0 +1,26 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+unpackage/
+server/bin/
+server/tmp/
+web/shared/
+
+# 日志
+*.log
+
+# uni-app 微信开发者工具私有配置
+project.private.config.json
+
+# 本地环境与 IDE
+.vscode/
+.idea/
+.claude/
+.playwright-mcp/
+*.local
+
+# 系统文件
+.DS_Store
+Thumbs.db

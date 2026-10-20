@@ -1,0 +1,36 @@
+/* 全局基础样式 */
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', Arial, sans-serif;
+  background-color: #f5f7fa;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 页面通用卡片间距 */
+.page-card + .page-card {
+  margin-top: 16px;
+}
+
+/* 表格工具栏 */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* 分页容器 */
+.pagination-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

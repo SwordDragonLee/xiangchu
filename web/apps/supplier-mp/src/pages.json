@@ -1,0 +1,60 @@
+{
+  "pages": [
+    {
+      "path": "pages/workbench/index",
+      "style": {
+        "navigationBarTitleText": "供应商工作台"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
+      "path": "pages/apply/index",
+      "style": {
+        "navigationBarTitleText": "供应商入驻"
+      }
+    },
+    {
+      "path": "pages/goods/index",
+      "style": {
+        "navigationBarTitleText": "商品管理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/purchases/index",
+      "style": {
+        "navigationBarTitleText": "采购履约",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/purchases/detail",
+      "style": {
+        "navigationBarTitleText": "采购详情"
+      }
+    },
+    {
+      "path": "pages/income/index",
+      "style": {
+        "navigationBarTitleText": "收入提现"
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "我的档案"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "供应商工作台",
+    "navigationBarBackgroundColor": "#16a34a",
+    "backgroundColor": "#f5f6f8"
+  }
+}

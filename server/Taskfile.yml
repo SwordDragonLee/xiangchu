@@ -1,0 +1,64 @@
+version: '3'
+
+vars:
+  GOPATH:
+    sh: go env GOPATH
+
+tasks:
+  run:
+    desc: 启动开发服务（自动先停掉占用 8080 的旧进程）
+    deps: [stop]
+    cmds:
+      - go run ./cmd/server -c configs/config.yaml
+
+  dev:
+    desc: 热重载开发（air：改 .go/.yaml 自动重编译重启）
+    deps: [stop]
+    cmds:
+      - '"{{.GOPATH}}/bin/air.exe" -c .air.toml'
+
+  build:
+    desc: 编译到 bin/server.exe
+    cmds:
+      - go build -o bin/server.exe ./cmd/server
+
+  tidy:
+    desc: 整理依赖
+    cmds:
+      - go mod tidy
+
+  swagger:
+    desc: 重新生成 Swagger 文档（swag init；首次需 go install github.com/swaggo/swag/cmd/swag@v1.16.6）
+    cmds:
+      - '"{{.GOPATH}}/bin/swag.exe" init -g cmd/server/main.go --parseInternal -o docs'
+
+  test:
+    desc: 跑全部测试
+    cmds:
+      - go test ./...
+
+  stop:
+    desc: 停掉占用 8080 的旧后端进程（无占用时静默通过）
+    cmds:
+      - powershell -ExecutionPolicy Bypass -File scripts/stop-8080.ps1
+
+  migrate:
+    desc: 数据库迁移到最新版本（生产部署需在服务启动前执行）
+    cmds:
+      - go run ./cmd/migrate -c configs/config.yaml up
+  migrate:status:
+    desc: 查看数据库当前迁移版本
+    cmds:
+      - go run ./cmd/migrate -c configs/config.yaml status
+  migrate:down:
+    desc: 回滚上一步迁移
+    cmds:
+      - go run ./cmd/migrate -c configs/config.yaml down 1
+  migrate:new:
+    desc: 生成下一对迁移文件（用法 task server:migrate:new -- add_orders_channel）
+    cmds:
+      - go run ./cmd/migrate -c configs/config.yaml create {{.CLI_ARGS}}
+  migrate:baseline:
+    desc: 存量库一次性标记基线 v1（AutoMigrate 时代的库专用，空库误用会报错）
+    cmds:
+      - go run ./cmd/migrate -c configs/config.yaml baseline

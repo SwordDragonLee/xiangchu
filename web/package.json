@@ -1,0 +1,13 @@
+{
+  "name": "xiangchu-web",
+  "private": true,
+  "scripts": {
+    "dev:admin": "pnpm --filter admin dev",
+    "build:admin": "pnpm --filter admin build",
+    "dev:user-mp": "pnpm --filter user-mp dev:h5",
+    "dev:chef-mp": "pnpm --filter chef-mp dev:h5",
+    "dev:supplier-mp:wx": "pnpm --filter supplier-mp dev:mp-weixin",
+    "build:supplier-mp": "pnpm --filter supplier-mp build:mp-weixin"
+  },
+  "engines": { "node": ">=18" }
+}

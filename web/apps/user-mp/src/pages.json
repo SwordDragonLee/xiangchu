@@ -1,0 +1,92 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": { "navigationBarTitleText": "乡厨到家" }
+    },
+    {
+      "path": "pages/chef/list",
+      "style": { "navigationBarTitleText": "找乡厨" }
+    },
+    {
+      "path": "pages/chef/detail",
+      "style": { "navigationBarTitleText": "乡厨档案" }
+    },
+    {
+      "path": "pages/booking/create",
+      "style": { "navigationBarTitleText": "预订宴席" }
+    },
+    {
+      "path": "pages/booking/date",
+      "style": { "navigationBarTitleText": "选择宴席日期" }
+    },
+    {
+      "path": "pages/order/list",
+      "style": { "navigationBarTitleText": "我的订单" }
+    },
+    {
+      "path": "pages/order/detail",
+      "style": { "navigationBarTitleText": "订单详情" }
+    },
+    {
+      "path": "pages/order/review",
+      "style": { "navigationBarTitleText": "评价订单" }
+    },
+    {
+      "path": "pages/order/aftersale",
+      "style": { "navigationBarTitleText": "申请售后" }
+    },
+    {
+      "path": "pages/coupon/index",
+      "style": { "navigationBarTitleText": "优惠券" }
+    },
+    {
+      "path": "pages/address/index",
+      "style": { "navigationBarTitleText": "地址簿" }
+    },
+    {
+      "path": "pages/login/index",
+      "style": { "navigationBarTitleText": "登录" }
+    },
+    {
+      "path": "pages/apply/index",
+      "style": { "navigationBarTitleText": "入驻申请" }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": { "navigationBarTitleText": "我的" }
+    }
+  ],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#d97706",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "static/tab-home.png",
+        "selectedIconPath": "static/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/order/list",
+        "text": "订单",
+        "iconPath": "static/tab-order.png",
+        "selectedIconPath": "static/tab-order-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "static/tab-my.png",
+        "selectedIconPath": "static/tab-my-active.png"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "乡厨到家",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f5f5f5"
+  }
+}
